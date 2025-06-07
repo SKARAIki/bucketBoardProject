@@ -10,11 +10,12 @@ import java.time.LocalDateTime;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "members")
-public class Members {
+// 멤버 객체에 멤버 한명의 데이터가 담기기 때문에 단수로 사용
+public class Member {
 
     //속
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -34,7 +35,7 @@ public class Members {
 
     //생
     // JPA가 사용하기 위한 기본 생성자
-    public Members(){}
+    public Member(){}
     //기
 
 

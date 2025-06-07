@@ -1,6 +1,6 @@
 package com.example.springboardproject.borad.entity;
 
-import com.example.springboardproject.member.entity.Members;
+import com.example.springboardproject.member.entity.Member;
 import jakarta.persistence.*;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "board")
+@Table(name = "boards")
 public class Board {
 
     // 속
@@ -23,7 +23,7 @@ public class Board {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Members memberId;
+    private Member member;
 
     @Column(name = "member_name", nullable = false, length = 50)
     private String memberName;
@@ -58,8 +58,8 @@ public class Board {
         return id;
     }
 
-    public Members getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
     public String getMemberName() {
