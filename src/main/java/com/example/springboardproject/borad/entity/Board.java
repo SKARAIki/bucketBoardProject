@@ -49,8 +49,12 @@ public class Board {
     private LocalDateTime updateAt;
 
     // 생
-    // JPA가 사용하기 위한 기본 생성자
-    public Board(){}
+
+    /**
+     * JPA가 사용하기 위한 기본 생성자
+     * 다른 코드에서 호출 할 위험을 막기 위해 protect로 변경
+     */
+    protected Board(){}
 
     // 기
 
