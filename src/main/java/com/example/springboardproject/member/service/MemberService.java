@@ -1,5 +1,6 @@
 package com.example.springboardproject.member.service;
 
+import com.example.springboardproject.Config.PasswordEncoder;
 import com.example.springboardproject.member.dto.requestDto.MemberCreateRequestDto;
 import com.example.springboardproject.member.dto.responseDto.MemberCreateResponseDto;
 import com.example.springboardproject.member.entity.Member;
@@ -7,18 +8,25 @@ import com.example.springboardproject.member.exception.InvalidPasswordConfirmati
 import com.example.springboardproject.member.exception.InvalidUserInputException;
 import com.example.springboardproject.member.exception.IsNotValidPasswordException;
 import com.example.springboardproject.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
+@Transactional
 public class MemberService {
     // 속
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 생
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder)
+    {
         this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     //기
 
@@ -26,8 +34,9 @@ public class MemberService {
             (MemberCreateRequestDto memberCreateRequestDto) {
         // 데이터 준비
         String memberName = memberCreateRequestDto.getMemberName();
-        String memberPassword = memberCreateRequestDto.getPassword();
-        String memberCheckPassword = memberCreateRequestDto.getCheckPassword();
+        String memberPassword = memberCreateRequestDto.getPassword().replaceAll("\\s+", "");
+        String memberCheckPassword = memberCreateRequestDto.getCheckPassword().replaceAll("\\s+", "");
+
 
         /**
          * 데이터 검증
@@ -45,8 +54,11 @@ public class MemberService {
         else if (!memberPassword.equals(memberCheckPassword)) {
             throw new InvalidPasswordConfirmationException();
         }
+        // 비밀번호 암호화
+        String passwordEncode = passwordEncoder.encode(memberPassword);
+
         // Entity 준비
-        Member member = Member.createFromMemberCreateRequestDto(memberName, memberPassword);
+        Member member = Member.createFromMemberCreateRequestDto(memberName, passwordEncode);
         // 데이터 저장
         memberRepository.save(member);
         // 응답 Dto 준비
