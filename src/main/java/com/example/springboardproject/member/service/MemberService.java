@@ -34,6 +34,7 @@ public class MemberService {
             (MemberCreateRequestDto memberCreateRequestDto) {
         // 데이터 준비
         String memberName = memberCreateRequestDto.getMemberName();
+        String memberEmail = memberCreateRequestDto.getEmail();
         String memberPassword = memberCreateRequestDto.getPassword().replaceAll("\\s+", "");
         String memberCheckPassword = memberCreateRequestDto.getCheckPassword().replaceAll("\\s+", "");
 
@@ -58,7 +59,7 @@ public class MemberService {
         String passwordEncode = passwordEncoder.encode(memberPassword);
 
         // Entity 준비
-        Member member = Member.createFromMemberCreateRequestDto(memberName, passwordEncode);
+        Member member = Member.createFromMemberCreateRequestDto(memberName, memberEmail, passwordEncode);
         // 데이터 저장
         memberRepository.save(member);
         // 응답 Dto 준비

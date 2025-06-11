@@ -1,6 +1,8 @@
 package com.example.springboardproject.member.exception;
 
 import com.example.springboardproject.member.dto.responseDto.APIErrorResponse;
+
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,5 +45,19 @@ public class GlobalExceptionHandler {
         ResponseEntity<APIErrorResponse> InvalidPasswordConfirmationExceptionResponse
                 = new ResponseEntity<>(invalidUserInputResponse, HttpStatus.BAD_REQUEST);
         return InvalidPasswordConfirmationExceptionResponse;
+    }
+    // 올바르지 못한 이메일 형식 예외처리
+    //
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<APIErrorResponse> handleEmailConstraintViolationException()
+    {
+        String EmailConstraintViolationMessage = "이메일 형식을 지켜주십시오 올바른 이메일 형식은 abcd@edfgc.com 입니다";
+
+        APIErrorResponse EmailConstraintViolationResponse
+                = APIErrorResponse.errorResponse(HttpStatus.BAD_REQUEST, EmailConstraintViolationMessage);
+        ResponseEntity<APIErrorResponse> EmailConstraintViolationExceptionResponse
+                = new ResponseEntity<>(EmailConstraintViolationResponse, HttpStatus.BAD_REQUEST);
+        return EmailConstraintViolationExceptionResponse;
     }
 }
