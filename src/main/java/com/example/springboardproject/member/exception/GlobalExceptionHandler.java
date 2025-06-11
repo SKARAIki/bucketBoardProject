@@ -60,4 +60,27 @@ public class GlobalExceptionHandler {
                 = new ResponseEntity<>(EmailConstraintViolationResponse, HttpStatus.BAD_REQUEST);
         return EmailConstraintViolationExceptionResponse;
     }
+
+    // 로그인 시 잘못된 이메일을 입력 했을 때 예외처리
+    @ExceptionHandler(LoginEmailNotFoundException.class)
+    public ResponseEntity<APIErrorResponse> handleLoginMemberNotFoundException(LoginEmailNotFoundException e)
+    {
+
+        APIErrorResponse LoginMemberNotFoundResponse
+                = APIErrorResponse.errorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        ResponseEntity<APIErrorResponse> LoginMemberNotFoundExceptionResponse
+                = new ResponseEntity<>(LoginMemberNotFoundResponse, HttpStatus.BAD_REQUEST);
+        return LoginMemberNotFoundExceptionResponse;
+    }
+
+    // 로그인 시 비밀번호가 다를 때 예외처리
+    @ExceptionHandler(LoginInvalidPasswordException.class)
+    public ResponseEntity<APIErrorResponse> handleLoginInvalidPasswordException(LoginInvalidPasswordException e)
+    {
+        APIErrorResponse LoginInvalidPasswordResponse
+                = APIErrorResponse.errorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        ResponseEntity<APIErrorResponse> LoginInvalidPasswordExceptionResponse
+                = new ResponseEntity<>(LoginInvalidPasswordResponse, HttpStatus.BAD_REQUEST);
+        return LoginInvalidPasswordExceptionResponse;
+    }
 }
