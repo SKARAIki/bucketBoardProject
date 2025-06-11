@@ -4,6 +4,7 @@ import com.example.springboardproject.Config.PasswordEncoder;
 import com.example.springboardproject.member.dto.requestDto.MemberCreateRequestDto;
 import com.example.springboardproject.member.dto.responseDto.MemberCreateResponseDto;
 import com.example.springboardproject.member.entity.Member;
+import com.example.springboardproject.member.exception.DuplicateEmailException;
 import com.example.springboardproject.member.exception.InvalidPasswordConfirmationException;
 import com.example.springboardproject.member.exception.InvalidUserInputException;
 import com.example.springboardproject.member.exception.IsNotValidPasswordException;
@@ -23,8 +24,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     // 생
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder)
-    {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -37,7 +37,7 @@ public class MemberService {
         String memberEmail = memberCreateRequestDto.getEmail();
         String memberPassword = memberCreateRequestDto.getPassword().replaceAll("\\s+", "");
         String memberCheckPassword = memberCreateRequestDto.getCheckPassword().replaceAll("\\s+", "");
-
+        boolean existsByEmail = memberRepository.existsByEmail(memberEmail);
 
         /**
          * 데이터 검증
@@ -51,19 +51,23 @@ public class MemberService {
         } else if (!memberPassword.matches("^(?=.*[a-z])(?=.*\\d)(?=.*[^\\w\\s])[\\S]{8,20}$")) {
             throw new IsNotValidPasswordException();
 
-        }
-        else if (!memberPassword.equals(memberCheckPassword)) {
+        } else if (!memberPassword.equals(memberCheckPassword)) {
             throw new InvalidPasswordConfirmationException();
+        } else if(existsByEmail){
+            throw new DuplicateEmailException();
         }
+
+
         // 비밀번호 암호화
         String passwordEncode = passwordEncoder.encode(memberPassword);
 
         // Entity 준비
         Member member = Member.createFromMemberCreateRequestDto(memberName, memberEmail, passwordEncode);
         // 데이터 저장
-        memberRepository.save(member);
+        Member save = memberRepository.save(member);
+
         // 응답 Dto 준비
-        MemberCreateResponseDto memberCreateResponseDto = new MemberCreateResponseDto();
+        MemberCreateResponseDto memberCreateResponseDto = new MemberCreateResponseDto(save.getId());
         ResponseEntity<MemberCreateResponseDto> successResponse
                 = new ResponseEntity<>(memberCreateResponseDto, HttpStatusCode.valueOf(200));
 
@@ -71,15 +75,3 @@ public class MemberService {
         return successResponse;
     }
 }
-
-/**
- * {
- * 		"status": 201,
- * 		"message": "회원가입이 정상적으로 완료 되었습니다."
- * }    "data": null
- *  아래 코드
- */
-//        String successMessage = "회원가입이 성공적으로 완료";
-//        APIResponseDto succeed = APIResponseDto.success(HttpStatus.CREATED, successMessage);
-//        ResponseEntity<APIResponseDto> successResponse
-//        = new ResponseEntity<>(succeed , HttpStatus.CREATED);

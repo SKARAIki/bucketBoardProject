@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 public class APIErrorResponse {
 
     // 속성
-    private int status;
-    private String message;
+    private final int status;
+    private final String message;
 
 
 
