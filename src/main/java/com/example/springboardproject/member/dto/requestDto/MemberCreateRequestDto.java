@@ -2,10 +2,10 @@ package com.example.springboardproject.member.dto.requestDto;
 
 public class MemberCreateRequestDto {
     // 속
-    private String memberName;
-    private String email;
-    private String password;
-    private String checkPassword;
+    private final String memberName;
+    private final String email;
+    private final String password;
+    private final String checkPassword;
 
     // 생
     /**

@@ -10,22 +10,25 @@ import com.example.springboardproject.member.repository.MemberRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public class LoginService {
+public class AuthLoginService {
     // 속
-    private final MemberRepository memberRepository ;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     //생
 
-    public LoginService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public AuthLoginService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
     //기
-    public MemberLoginResponseDto loginServiceAPI(LoginRequestDto requestDto)
-    {
+    public MemberLoginResponseDto loginServiceAPI(LoginRequestDto requestDto) {
         //데이터 조회
+
         /**
          * Optional<Member> findByEmail(String email); 의 작성된 코드에서 조회하기 때문에
          * Optional<Member> memberRepositoryByEmail 로 되어야 하지만 Optional 의 제공 메서드인
@@ -34,22 +37,27 @@ public class LoginService {
          */
         Member memberRepositoryByEmail
                 = memberRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow(()-> new LoginEmailNotFoundException());
+                .orElseThrow(() -> new LoginEmailNotFoundException());
 
         // 비밀번호 일치 확인. 평문 비밀번호를 인코드하여, db에 인코드화 되어 저장된 비밀번호와 매치
         boolean passwordMatches
                 = passwordEncoder.matches(requestDto.getPassword(),
                 memberRepositoryByEmail.getPassword());
-        if (!passwordMatches){
+        if (!passwordMatches) {
             throw new LoginInvalidPasswordException();
         }
-
+        Long id = memberRepositoryByEmail.getId();
         // 로그인 응답 DTO
+
         MemberLoginResponseDto loginResponseDto
-                = new MemberLoginResponseDto(HttpStatus.OK, "로그인 되었습니다. 환영합니다");
+                = new MemberLoginResponseDto(id,HttpStatus.OK, "로그인 되었습니다. 환영합니다");
         // 반환
         return loginResponseDto;
 
+    }
+    public Optional<Member> findById(Long id){
+        Optional<Member> byId = memberRepository.findById(id);
+        return byId;
     }
 }
 

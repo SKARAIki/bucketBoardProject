@@ -23,9 +23,11 @@ public class MemberController {
     }
 
     // 기
-    // 예외처리 커스텀클래스 만들어보기
+
     @PostMapping
-    public ResponseEntity<MemberCreateResponseDto> createMemberAPI(@Valid @RequestBody MemberCreateRequestDto memberCreateRequestDto) {
+    public ResponseEntity<MemberCreateResponseDto> createMemberAPI(
+            @Valid @RequestBody MemberCreateRequestDto memberCreateRequestDto)
+    {
 
         ResponseEntity<MemberCreateResponseDto> createMemberProcess
                 = memberService.createMemberService(memberCreateRequestDto);

@@ -83,4 +83,24 @@ public class GlobalExceptionHandler {
                 = new ResponseEntity<>(LoginInvalidPasswordResponse, HttpStatus.BAD_REQUEST);
         return LoginInvalidPasswordExceptionResponse;
     }
+    // 회원가입시 중복 이메일 검사
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<APIErrorResponse> handleDuplicateEmailException(DuplicateEmailException e)
+    {
+        APIErrorResponse DuplicateEmailResponse
+                = APIErrorResponse.errorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        ResponseEntity<APIErrorResponse> DuplicateEmailExceptionResponse
+                = new ResponseEntity<>(DuplicateEmailResponse, HttpStatus.BAD_REQUEST);
+        return DuplicateEmailExceptionResponse;
+    }
+    // 로그인 안할 때 에러메세지
+    @ExceptionHandler(NotFoundSessionKeyException.class)
+    public ResponseEntity<APIErrorResponse> handleNotFoundSessionKeyException(NotFoundSessionKeyException e)
+    {
+        APIErrorResponse NotFoundSessionKeyResponse
+                = APIErrorResponse.errorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        ResponseEntity<APIErrorResponse> NotFoundSessionKeyExceptionResponse
+                = new ResponseEntity<>(NotFoundSessionKeyResponse, HttpStatus.BAD_REQUEST);
+        return NotFoundSessionKeyExceptionResponse;
+    }
 }
