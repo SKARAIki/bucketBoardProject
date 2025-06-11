@@ -3,6 +3,7 @@ package com.example.springboardproject.member.controller;
 import com.example.springboardproject.member.dto.requestDto.MemberCreateRequestDto;
 import com.example.springboardproject.member.dto.responseDto.MemberCreateResponseDto;
 import com.example.springboardproject.member.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class MemberController {
     // 기
     // 예외처리 커스텀클래스 만들어보기
     @PostMapping
-    public ResponseEntity<MemberCreateResponseDto> createMemberAPI(@RequestBody MemberCreateRequestDto memberCreateRequestDto) {
+    public ResponseEntity<MemberCreateResponseDto> createMemberAPI(@Valid @RequestBody MemberCreateRequestDto memberCreateRequestDto) {
 
         ResponseEntity<MemberCreateResponseDto> createMemberProcess
                 = memberService.createMemberService(memberCreateRequestDto);

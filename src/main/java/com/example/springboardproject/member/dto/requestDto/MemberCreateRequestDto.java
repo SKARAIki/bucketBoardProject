@@ -3,12 +3,18 @@ package com.example.springboardproject.member.dto.requestDto;
 public class MemberCreateRequestDto {
     // 속
     private String memberName;
+    private String email;
     private String password;
     private String checkPassword;
 
     // 생
-    public MemberCreateRequestDto(String memberName, String password, String checkPassword) {
+    /**
+     * Request에선 DB에 저장된 Entity의 데이터정보를 가져올수가 없는데 아무생각없이 Entity entity.getxxxx 사용해서
+     * 500에러 및 HttpMessageConversionException 발생
+     */
+    public MemberCreateRequestDto(String memberName, String email, String password, String checkPassword) {
         this.memberName = memberName;
+        this.email = email;
         this.password = password;
         this.checkPassword = checkPassword;
     }
@@ -16,6 +22,10 @@ public class MemberCreateRequestDto {
 
     public String getMemberName() {
         return memberName;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getPassword() {

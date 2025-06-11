@@ -1,6 +1,8 @@
 package com.example.springboardproject.member.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +20,11 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    @NotBlank
+    @Email
+    @Column(name = "email", nullable = false, length = 50)
+    private String email;
 
     @Column(name = "member_name", nullable = false, length = 50)
     private String memberName;
@@ -46,17 +53,22 @@ public class Member {
      * MemberService.createMemberService
      * MemberCreatRequestDto 데이터를 받아 Entity로 사용
      */
-    private Member(String memberName, String password) {
+    private Member(String memberName, String email, String password) {
         this.memberName = memberName;
+        this.email = email;
         this.password = password;
     }
     // 팩토리메서드 패턴
-    public static Member createFromMemberCreateRequestDto(String memberName, String password){
-        return new Member(memberName, password);
+    public static Member createFromMemberCreateRequestDto(String memberName, String email ,String password){
+        return new Member(memberName, email ,password);
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getMemberName() {
