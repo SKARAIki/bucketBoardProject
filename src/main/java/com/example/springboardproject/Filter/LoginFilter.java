@@ -26,8 +26,6 @@ public class LoginFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
         log.info("로그인필터 로직 실행");
-        log.info("httpRequest {}", httpRequest);
-        log.info("httpResponse {}", httpResponse);
 
         // isWhiteList 에 포함된 경우 ture -> !ture -> false
         if (!isWhiteList(requestURI)) {
