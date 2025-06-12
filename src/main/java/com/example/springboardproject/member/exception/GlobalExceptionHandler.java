@@ -100,7 +100,7 @@ public class GlobalExceptionHandler {
         APIErrorResponse NotFoundSessionKeyResponse
                 = APIErrorResponse.errorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
         ResponseEntity<APIErrorResponse> NotFoundSessionKeyExceptionResponse
-                = new ResponseEntity<>(NotFoundSessionKeyResponse, HttpStatus.BAD_REQUEST);
+                = new ResponseEntity<>(NotFoundSessionKeyResponse, HttpStatus.UNAUTHORIZED);
         return NotFoundSessionKeyExceptionResponse;
     }
 }
