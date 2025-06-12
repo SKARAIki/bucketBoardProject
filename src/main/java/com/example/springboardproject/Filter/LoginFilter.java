@@ -34,18 +34,26 @@ public class LoginFilter implements Filter {
             // 세션이 존재하면 가져온다. 세션이 없으면 session = null
             HttpSession session = httpRequest.getSession(false);
 
-            // 로그인하지 않은 사용자인 경우
+            // 세션이 존재하지 않을 때
             if (session == null || session.getAttribute("세션키값") == null) {
-                log.info("로그아웃 성공");
+
                 throw new NotFoundSessionKeyException();
+                // 흠... 왜 전역처리의 관할범위에 필터는 존재하지 않는가?
             }
         }
         log.info("로그인 성공");
+
+
+
         // 1번경우 : whiteListURL에 등록된 URL 요청이면 바로 filterChain.doFilter()
         // 2번경우 : 필터 로직 통과 후 다음 필터 호출 filterChain.doFilter()
         // 다음 필터 없으면 Servlet -> Controller 호출하거나, 다른 Filter 존재시에 다음 Filter 호출
 
+
+
         filterChain.doFilter(servletRequest, servletResponse);
+
+
     }
 
     // 로그인 여부를 확인하는 URL인지 체크하는 메서드

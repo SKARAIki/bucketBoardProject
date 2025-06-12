@@ -16,8 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 @Slf4j
 @Service
@@ -27,7 +25,7 @@ public class AuthLoginService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     // 세션 저장
-    private Map<HttpSession, MemberSession> sessionStore = new HashMap<>();
+
 
     //생
 
@@ -57,25 +55,24 @@ public class AuthLoginService {
         if (!passwordMatches) {
             throw new LoginInvalidPasswordException();
         }
-        Long id = memberRepositoryByEmail.getId();
+        Long memberId = memberRepositoryByEmail.getId();
         // 세션 발급
-        HttpSession sessionId = servletRequest.getSession();
-        log.info("세션발급확인 {}",sessionId);
+        // 없으면 만들어서 가져오고, 있으면 만들지 않고 있는걸 가져온다
+        HttpSession session = servletRequest.getSession();
+        log.info("세션발급확인 {}",session);
 
         // 세션 저장소에 유저정보 저장
-        MemberSession memberSession = new MemberSession(id, "member");
-        sessionStore.put(sessionId, memberSession);
-
-        log.info("세션저장 확인 {}",sessionStore);
+        MemberSession memberSession = new MemberSession(memberId, "member");
 
         // 쿠키 생성 및 세트
         // key(Const.LOGIN_USER) : value(로그인 유저)
-        sessionId.setAttribute(Const.LOGIN_USER, id);
-
+        session.setAttribute(Const.LOGIN_USER, memberSession);
+//        session.getAttribute(Const.LOGIN_USER);
+//        MemberSession memberSession1 = (MemberSession) session.getAttribute(Const.LOGIN_USER);
         // 로그인 응답 DTO
 
         MemberLoginResponseDto loginResponseDto
-                = new MemberLoginResponseDto(id, HttpStatus.OK, "로그인 되었습니다. 환영합니다");
+                = new MemberLoginResponseDto(memberId, HttpStatus.OK, "로그인 되었습니다. 환영합니다");
         // 반환
         return loginResponseDto;
 
